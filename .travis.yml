@@ -1,0 +1,27 @@
+language: node_js
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+matrix:
+  include:
+    - node_js: 10
+      env: TASK=lint
+    - node_js: 6
+      env: TASK=test
+    - node_js: 8
+      env: TASK=test
+    - node_js: 10
+      env: TASK=test
+    - node_js: 10
+      env: TASK=build
+
+install:
+  - if [[ "$TASK" == "test" ]]; then yarn global add codecov; fi
+  - yarn --ignore-scripts
+
+script:
+  - yarn run $TASK
+  - if [[ "$TASK" == "test" ]]; then codecov; fi

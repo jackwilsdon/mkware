@@ -1,0 +1,39 @@
+{
+  "name": "mkware",
+  "version": "1.0.0",
+  "description": "Create a middleware pipe",
+  "main": "index.js",
+  "homepage": "https://github.com/jackwilsdon/mkware",
+  "bugs": {
+    "url": "https://github.com/jackwilsdon/mkware/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jackwilsdon/mkware.git"
+  },
+  "author": "Jack Wilsdon <jack.wilsdon@gmail.com>",
+  "license": "LGPL-3.0",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "prettier-check \"**/*.js\" \"!**/*.min.js\"",
+    "build:index": "uglifyjs src/index.js -c -m -o index.js",
+    "build:promise": "uglifyjs src/promise.js -c -m -o promise.js",
+    "build": "npm run build:index && npm run build:promise",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "jest": "^23.4.2",
+    "prettier": "^1.14.0",
+    "prettier-check": "^2.0.0",
+    "uglify-js": "^3.4.6"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "./coverage",
+    "collectCoverage": true
+  }
+}

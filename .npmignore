@@ -1,0 +1,4 @@
+/.prettierrc
+/.travis.yml
+/yarn.lock
+/src
