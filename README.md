@@ -4,19 +4,19 @@ Make you a middleware pipe!
 
 ## Installation
 
-```Shell
+```sh
 npm install --save mkware
 ```
 
 or
 
-```Shell
+```sh
 yarn add mkware
 ```
 
 ## Usage (normal)
 
-```JavaScript
+```js
 var mkware = require('mkware');
 
 var execute = mkware(
@@ -39,7 +39,7 @@ execute(5); // last middleware outputs 17
 
 ## Usage (promise)
 
-```JavaScript
+```js
 var mkware = require('mkware/promise');
 
 var execute = mkware(
