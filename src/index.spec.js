@@ -19,7 +19,7 @@ it('returns a function', function() {
   var ware = mkware(
     createMiddleware(),
     createMiddleware(),
-    createMiddleware(true),
+    createMiddleware(true)
   );
 
   expect(typeof ware).toBe('function');
@@ -49,7 +49,7 @@ it('has a wares attribute on the next function containing a list of all middlewa
     expect(jestWare).toHaveBeenCalledWith(
       expect.objectContaining({
         wares: wares,
-      }),
+      })
     );
   });
 });
@@ -64,7 +64,7 @@ it('has a ware attribute on the next function pointing to the next middleware', 
     expect(jestWare).toHaveBeenCalledWith(
       expect.objectContaining({
         ware: wares[index + 1],
-      }),
+      })
     );
   });
 });
@@ -87,7 +87,7 @@ it('forwards arguments passed to next to the next middleware', function() {
     createAddMiddleware(),
     createAddMiddleware(),
     createAddMiddleware(),
-    finalWare,
+    finalWare
   );
 
   ware(0);
