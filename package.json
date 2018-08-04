@@ -1,6 +1,6 @@
 {
   "name": "mkware",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Create a middleware pipe",
   "main": "index.js",
   "homepage": "https://github.com/jackwilsdon/mkware",
