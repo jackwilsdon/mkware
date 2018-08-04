@@ -11,19 +11,12 @@ var mkware = require('.');
 function createMiddlewareWrapper(middlewares) {
   return function wrapMiddleware(ware) {
     return function wrappedMiddleware() {
-      var forward = Array.prototype.slice.call(arguments, 0, -1);
       var next = arguments[arguments.length - 1];
 
-      // Find the index of the original middleware we are wrapping.
-      var index = middlewares.indexOf(ware);
-
       next.wares = middlewares;
+      next.ware = middlewares[middlewares.indexOf(ware) + 1];
 
-      // The next middleware is the one after the middleware we are wrapping.
-      next.ware = middlewares[index + 1];
-
-      // Call the original middleware we're wrapping.
-      return ware.apply(this, forward.concat(next));
+      return ware.apply(this, arguments);
     };
   };
 }

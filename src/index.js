@@ -4,15 +4,27 @@
  * @param {Function} next the next method to bind
  * @param {Number} index the index of the middleware to bind
  * @param {Function[]} wares the middlewares to bind
+ * @param {Array} [wareArguments] arguments for the next middleware. If this
+ *                                is not provided then a next method is
+ *                                returned which uses it's arguments as the
+ *                                ware arguments.
  * @returns {Function} the bound next method
  */
-function createNext(next, index, wares) {
-  var boundNext = next.bind(null, index);
+function bindNext(next, index, wares, wareArguments) {
+  if (arguments.length >= 4) {
+    next = next.bind(null, index, wareArguments);
+  } else {
+    var originalNext = next;
 
-  boundNext.wares = wares;
-  boundNext.ware = wares[index];
+    next = function next() {
+      originalNext.call(null, index, Array.prototype.slice.call(arguments));
+    };
+  }
 
-  return boundNext;
+  next.wares = wares;
+  next.ware = wares[index];
+
+  return next;
 }
 
 /**
@@ -20,28 +32,24 @@ function createNext(next, index, wares) {
  *
  * @param {...Function} middlewares the middleware for the pipe
  * @returns {Function} a function which executes the provided middleware.
- *                     Any arguments passed to this function will be forwarded
- *                     to the first middleware
+ *                     Any arguments passed to this function will be passed to
+ *                     all middleware
  */
 module.exports = function mkware() {
   // Convert the middleware list to an array,
-  var middlewares = Array.prototype.slice.call(arguments);
+  var wares = Array.prototype.slice.call(arguments);
 
-  var next = function next(index) {
-    // If we've reached the end of our middleware chain then throw an error.
-    if (index >= middlewares.length) {
+  var next = function next(index, wareArguments) {
+    if (index >= wares.length) {
       throw new Error('reached end of middleware chain');
     }
 
-    // Build the arguments for the next middleware.
-    var nextArguments = Array.prototype.slice
-      .call(arguments, 1)
-      .concat(createNext(next, index + 1, middlewares));
+    var nextWareArguments = wareArguments.concat(
+      bindNext(next, index + 1, wares, wareArguments)
+    );
 
-    // Call the next middleware.
-    middlewares[index].apply(null, nextArguments);
+    wares[index].apply(null, nextWareArguments);
   };
 
-  // Create a new next method calling the initial middleware.
-  return createNext(next, 0, middlewares);
+  return bindNext(next, 0, wares);
 };

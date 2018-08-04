@@ -20,21 +20,24 @@ yarn add mkware
 var mkware = require('mkware');
 
 var execute = mkware(
-  function(value, next) {
-    next(value, value + 1);
+  function(object, next) {
+    object.value += 1;
+    next();
   },
-  function(originalValue, value, next) {
-    next(originalValue, value * 2);
+  function(object, next) {
+    object.value *= 2;
+    next();
   },
-  function(originalValue, value, next) {
-    next(originalValue + value);
+  function(object, next) {
+    object.value += 5;
+    next();
   },
   function(value) {
     console.log(value);
   }
 );
 
-execute(5); // last middleware outputs 17
+execute({ value: 5 }); // last middleware outputs 17
 ```
 
 ## Usage (promise)
@@ -43,19 +46,22 @@ execute(5); // last middleware outputs 17
 var mkware = require('mkware/promise');
 
 var execute = mkware(
-  function(value, next) {
-    next(value, value + 1);
+  function(object, next) {
+    object.value += 1;
+    next();
   },
-  function(originalValue, value, next) {
-    next(originalValue, value * 2);
+  function(object, next) {
+    object.value *= 2;
+    next();
   },
-  function(originalValue, value, next) {
-    next(originalValue + value);
+  function(object, next) {
+    object.value += 5;
+    next();
   }
 );
 
-execute(5).then(function(value) {
-  console.log(value); // 17
+execute({ value: 5 }).then(function(object) {
+  console.log(object.value); // 17
 });
 ```
 
@@ -68,23 +74,26 @@ var mkware = require('mkware-builder');
 
 var ware = mkware();
 
-ware.use(function(value, next) {
-  next(value, value + 1);
+ware.use(function(object, next) {
+    object.value += 1;
+    next();
 });
 
-ware.use(function(originalValue, value, next) {
-  next(originalValue, value * 2);
+ware.use(function(object, next) {
+    object.value *= 2;
+    next();
 });
 
-ware.use(function(originalValue, value, next) {
-  next(originalValue + value);
+ware.use(function(object, next) {
+    object.value += 5;
+    next();
 });
 
-ware.use(function(value) {
-  console.log(value);
+ware.use(function(object) {
+  console.log(object.value);
 });
 
-ware(5); // last middleware outputs 17
+ware({ value: 5 }); // last middleware outputs 17
 ```
 
 There is also a promise-based variant at [`mkware-builder/promise`][mkware-builder];
