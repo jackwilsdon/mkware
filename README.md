@@ -59,6 +59,58 @@ execute(5).then(function(value) {
 });
 ```
 
+## Builder
+
+Need a more conventional way to set up your middleware? Try [`mkware-builder`][mkware-builder];
+
+```js
+var mkware = require('mkware-builder');
+
+var ware = mkware();
+
+ware.use(function(value, next) {
+  next(value, value + 1);
+});
+
+ware.use(function(originalValue, value, next) {
+  next(originalValue, value * 2);
+});
+
+ware.use(function(originalValue, value, next) {
+  next(originalValue + value);
+});
+
+ware.use(function(value) {
+  console.log(value);
+});
+
+ware(5); // last middleware outputs 17
+```
+
+There is also a promise-based variant at [`mkware-builder/promise`][mkware-builder];
+
+```js
+var mkware = require('mkware-builder/promise');
+
+var ware = mkware();
+
+ware.use(function(value, next) {
+  next(value, value + 1);
+});
+
+ware.use(function(originalValue, value, next) {
+  next(originalValue, value * 2);
+});
+
+ware.use(function(originalValue, value, next) {
+  next(originalValue + value);
+});
+
+ware(5).then(function(value) {
+  console.log(value); // 17
+});
+```
+
 [NPM Version Badge]: https://img.shields.io/npm/v/mkware.svg
 [NPM]: https://npmjs.com/package/mkware
 [Node Version Badge]: https://img.shields.io/node/v/mkware.svg
@@ -66,3 +118,4 @@ execute(5).then(function(value) {
 [Travis CI]: https://travis-ci.org/jackwilsdon/mkware
 [Coverage Badge]: https://img.shields.io/codecov/c/github/jackwilsdon/mkware.svg
 [Coverage]: https://codecov.io/gh/jackwilsdon/mkware
+[mkware-builder]: https://npmjs.com/package/mkware-builder
